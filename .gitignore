@@ -14,3 +14,5 @@ platforms/bk7231n/bk7231n_os/tools/generate/*.bin
 !platforms/bk7231n/bk7231n_os/tools/generate/bk7231n_bootloader.bin
 !platforms/bk7231n/bk7231n_os/tools/generate/bk7231n_bootloader_enc.bin
 !platforms/bk7231n/bk7231n_os/tools/generate/package.bin
+#!platforms/bk7231n/
+platforms/bk7231n/toolchain/gcc-arm-none-eabi-4_9-2015q1.tar
