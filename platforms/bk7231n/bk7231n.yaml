@@ -1,0 +1,15 @@
+spec:
+  name: bk7231n
+  version: 0.0.1-beta.0
+  summary: embed module created by embedded-cli.
+  homepage: YOUR_HOMEPAGE
+  license:
+    type: MIT
+    file: LICENSE
+  author:
+    name: embedCI
+    email: embed@tuya.com
+  source:
+    git: https://registry.code.tuya-inc.top/hardware_wifi_soc/bk7231n.git
+    tag: 0.0.1-beta.0
+
