@@ -1,4 +1,6 @@
 
+#ifdef _SKIP_CJSON_HERE // instead of commenting out
+
 #ifndef cJSON__h
 #define cJSON__h
 
@@ -93,6 +95,8 @@ typedef struct ty_cJSON_Hooks cJSON_Hooks;
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
 
 #endif

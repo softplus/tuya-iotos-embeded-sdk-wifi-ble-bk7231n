@@ -103,7 +103,24 @@ void ethernetif_input(int iface, struct pbuf *p);
  * @param netif the already initialized lwip network interface structure
  *        for this ethernetif
  */
+/**
+ * In this function, the hardware should be initialized.
+ * Called from ethernetif_init().
+ *
+ * @param netif the already initialized lwip network interface structure
+ *        for this ethernetif
+ */
 
+
+#define MY_OPENBK7231N_USE_MAC_AS_WLAN_NAME 1
+
+#if MY_OPENBK7231N_USE_MAC_AS_WLAN_NAME
+char g_customWlanName[32];
+
+// This will give linker errors on any non-App project...
+const char *CFG_GetDeviceName();
+
+#else
 const char wlan_name[][6] = 
 {
     "wlan0\0",
@@ -111,14 +128,27 @@ const char wlan_name[][6] =
     "wlan2\0",
     "wlan3\0",    
 };
+#endif
+
 static void low_level_init(struct netif *netif)
 {
+	const char *tmpPtr;
     VIF_INF_PTR vif_entry = (VIF_INF_PTR)(netif->state);
     u8 *macptr = (u8*)&vif_entry->mac_addr;
     
 #if LWIP_NETIF_HOSTNAME
+#if MY_OPENBK7231N_USE_MAC_AS_WLAN_NAME
+	tmpPtr = CFG_GetDeviceName();
+	if(tmpPtr != 0 && tmpPtr[0] != 0) {
+        netif->hostname = tmpPtr;
+	} else {
+        sprintf(g_customWlanName,"OpenBK7231N_%02X%02X%02X%02X",macptr[0],macptr[1],macptr[2],macptr[3]);
+        netif->hostname = g_customWlanName;
+    }
+#else
     /* Initialize interface hostname */
     netif->hostname = (char*)&wlan_name[vif_entry->index];
+#endif
 #endif /* LWIP_NETIF_HOSTNAME */    
 
 	//wifi_get_mac_address((char *)wireless_mac, type);
@@ -134,7 +164,9 @@ static void low_level_init(struct netif *netif)
     netif->mtu = 1500;
     /* device capabilities */
     /* don't set NETIF_FLAG_ETHARP if this device is not an ethernet one */
-    netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
+	// 2022 - added  | NETIF_FLAG_IGMP; for multicast
+    netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP | NETIF_FLAG_IGMP;
+    //netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
     ETH_INTF_PRT("leave low level!\r\n");
 }
 

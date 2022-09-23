@@ -59,20 +59,20 @@ done
 fi
 
 # Remove TUYA Common OBJs first
-if [ -e "Debug/tuya_common/" ]; then
-for i in `find Debug/tuya_common/ -type f`; do
-    echo "Deleting $i"
-    rm -rf $i
-done
-fi
+# if [ -e "Debug/tuya_common/" ]; then
+# for i in `find Debug/tuya_common/ -type f`; do
+#     echo "Deleting $i"
+#     rm -rf $i
+# done
+# fi
 
 # Remove TUYA Components OBJs first
-if [ -e "Debug/components" ]; then
-for i in `find Debug/components -type d`; do
-    echo "Deleting $i"
-    rm -rf $i/*.o
-done
-fi
+# if [ -e "Debug/components" ]; then
+# for i in `find Debug/components -type d`; do
+#     echo "Deleting $i"
+#     rm -rf $i/*.o
+# done
+# fi
 
 if [ -z $CI_PACKAGE_PATH ]; then
     echo "not is ci build"
@@ -102,7 +102,7 @@ rm ${APP_BIN_NAME}_${APP_VERSION}_enc_uart_1.00.bin
 echo "generate ota file"
 ./${RT_OTA_PACK_TOOL} -f ${APP_BIN_NAME}_${APP_VERSION}.bin -v $CURRENT_TIME -o ${APP_BIN_NAME}_${APP_VERSION}.rbl -p app -c gzip -s aes -k 0123456789ABCDEF0123456789ABCDEF -i 0123456789ABCDEF
 ./${TY_PACKAGE} ${APP_BIN_NAME}_${APP_VERSION}.rbl ${APP_BIN_NAME}_UG_${APP_VERSION}.bin $APP_VERSION 
-rm ${APP_BIN_NAME}_${APP_VERSION}.rbl
+#rm ${APP_BIN_NAME}_${APP_VERSION}.rbl
 rm ${APP_BIN_NAME}_${APP_VERSION}.bin
 rm ${APP_BIN_NAME}_${APP_VERSION}.cpr
 rm ${APP_BIN_NAME}_${APP_VERSION}.out
@@ -120,6 +120,7 @@ if [ `ls -l ${APP_BIN_NAME}_UG_${APP_VERSION}.bin | awk '{print $5}'` -gt 679936
 fi
 
 echo "$(pwd)"
+cp ${APP_BIN_NAME}_${APP_VERSION}.rbl ../../${APP_PATH}/$APP_BIN_NAME/output/$APP_VERSION/${APP_BIN_NAME}_${APP_VERSION}.rbl
 cp ${APP_BIN_NAME}_UG_${APP_VERSION}.bin ../../${APP_PATH}/$APP_BIN_NAME/output/$APP_VERSION/${APP_BIN_NAME}_UG_${APP_VERSION}.bin
 cp ${APP_BIN_NAME}_UA_${APP_VERSION}.bin ../../${APP_PATH}/$APP_BIN_NAME/output/$APP_VERSION/${APP_BIN_NAME}_UA_${APP_VERSION}.bin
 cp ${APP_BIN_NAME}_QIO_${APP_VERSION}.bin ../../${APP_PATH}/$APP_BIN_NAME/output/$APP_VERSION/${APP_BIN_NAME}_QIO_${APP_VERSION}.bin

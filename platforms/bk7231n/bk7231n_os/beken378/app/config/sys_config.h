@@ -59,7 +59,8 @@
 #undef CFG_IEEE80211W
 #define CFG_IEEE80211W							   1
 //#define CFG_SME							       1
-#define CFG_WPA_CRYPTO_MBEDTLS                     1
+//#define CFG_WPA_CRYPTO_MBEDTLS                     1
+#define CFG_WPA_CRYPTO_MBEDTLS                     0
 #define CFG_WRAP_LIBC                              1
 #endif /* CFG_WPA3 */
 //#define CFG_MESH								   0
@@ -71,7 +72,8 @@
 #define ENC_METHOD_XOR                             2
 #define ENC_METHOD_AES                             3
 
-#define FAST_CONNECT_INFO_ENC_METHOD               ENC_METHOD_XOR
+// #define FAST_CONNECT_INFO_ENC_METHOD               ENC_METHOD_XOR
+#define FAST_CONNECT_INFO_ENC_METHOD               ENC_METHOD_NULL
 
 /*section 3-----driver macro config-----*/
 #define CFG_MAC_PHY_BAPASS                         1

@@ -2,7 +2,12 @@ TOP_DIR = ../../..
 
 # Initialize tool chain  /usr/bin/gcc-arm-none-eabi-4_9-2015q1/bin
 # -------------------------------------------------------------------
-ARM_GCC_TOOLCHAIN = ../toolchain/gcc-arm-none-eabi-4_9-2015q1/bin
+ifeq ($(shell uname), Linux)
+  TOOLCHAIN_DIR := ../toolchain
+else
+  TOOLCHAIN_DIR := ../toolchain/windows
+endif
+ARM_GCC_TOOLCHAIN = $(TOOLCHAIN_DIR)/gcc-arm-none-eabi-4_9-2015q1/bin
 
 CROSS_COMPILE = $(ARM_GCC_TOOLCHAIN)/arm-none-eabi-
 
@@ -124,6 +129,7 @@ INCLUDES += -I./beken378/driver/gpio
 INCLUDES += -I./beken378/driver/general_dma
 INCLUDES += -I./beken378/driver/spidma
 INCLUDES += -I./beken378/driver/icu
+INCLUDES += -I./beken378/driver/i2c
 INCLUDES += -I./beken378/driver/spi
 #INCLUDES += -I./beken378/driver/ble 
 #INCLUDES += -I./beken378/driver/ble/ble_pub/ip/ble/hl/inc 
@@ -276,6 +282,8 @@ SRC_C += ./beken378/driver/flash/flash.c
 SRC_C += ./beken378/driver/general_dma/general_dma.c
 SRC_C += ./beken378/driver/gpio/gpio.c
 #SRC_C += ./beken378/driver/i2s/i2s.c
+SRC_C += ./beken378/driver/i2c/i2c1.c
+SRC_C += ./beken378/driver/i2c/i2c2.c
 SRC_C += ./beken378/driver/icu/icu.c
 SRC_C += ./beken378/driver/intc/intc.c
 SRC_C += ./beken378/driver/irda/irda.c
@@ -736,6 +744,9 @@ SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/core/tcp_out.c
 SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/core/timeouts.c
 SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/core/udp.c
 SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/netif/ethernet.c
+SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/apps/httpd/httpd.c
+SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/apps/httpd/fs.c
+SRC_C += ./beken378/func/lwip_intf/lwip-2.0.2/src/apps/mqtt/mqtt.c
 SRC_C += ./beken378/func/lwip_intf/dhcpd/dhcp-server.c
 SRC_C += ./beken378/func/lwip_intf/dhcpd/dhcp-server-main.c
 SRC_C += ./beken378/func/misc/fake_clock.c
@@ -786,6 +797,8 @@ endif
 SRC_C += ./beken378/func/wlan_ui/wlan_ui.c
 #SRC_C += ./beken378/func/bk_tuya_pwm/bk_tuya_pwm.c
 SRC_C += ./beken378/func/net_param_intf/net_param.c
+SRC_C += ./beken378/func/key/multi_button.c
+SRC_C += ./beken378/func/key/key_main.c
 
 #rwnx ip module
 # SRC_C += ./beken378/ip/common/co_dlist.c
@@ -964,6 +977,9 @@ DEPENDENCY_OS_LIST = $(SRC_OS:%.c=$(OBJ_DIR)/%.d)
 CFLAGS =
 CFLAGS += -g -mthumb -mcpu=arm968e-s -march=armv5te -mthumb-interwork -mlittle-endian -Os -std=c99 -ffunction-sections -Wall -fsigned-char -fdata-sections -Wunknown-pragmas -nostdlib -Wno-unused-function -Wno-unused-but-set-variable
 
+CFLAGS += -DPLATFORM_BK7231N=1
+CFLAGS += -DPLATFORM_BEKEN=1
+
 OSFLAGS =
 OSFLAGS += -g -marm -mcpu=arm968e-s -march=armv5te -mthumb-interwork -mlittle-endian -Os -std=c99 -ffunction-sections -Wall -fsigned-char -fdata-sections -Wunknown-pragmas
 
@@ -1004,7 +1020,7 @@ endif
 # add tuya iot lib compile support
 # -------------------------------------------------------------------
 
-LIBFLAGS += -L $(TOP_DIR)/sdk/lib/ -ltuya_iot
+#LIBFLAGS += -L $(TOP_DIR)/sdk/lib/ -ltuya_iot
 CFLAGS += -DUSER_SW_VER=\"$(USER_SW_VER)\" -DAPP_BIN_NAME=\"$(APP_BIN_NAME)\"
 
 
@@ -1068,7 +1084,7 @@ endif # APP_MK_NAME
 # -------------------------------------------------------------------
 TY_OUTPUT = $(TOP_DIR)/${APP_DIR}/$(APP_BIN_NAME)/output/$(APP_VERSION)
 
-TY_SRC_DIRS += $(shell find ../tuya_common -type d)
+# TY_SRC_DIRS += $(shell find ../tuya_common -type d)
 TY_SRC_DIRS += $(shell find $(TOP_DIR)/${APP_DIR}/$(APP_BIN_NAME)/src -type d)
 TY_SRC_DIRS += $(shell find ../tuya_os_adapter/src -type d)
 
