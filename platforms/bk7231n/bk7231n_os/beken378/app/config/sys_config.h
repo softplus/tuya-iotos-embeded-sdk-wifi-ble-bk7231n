@@ -40,7 +40,9 @@
 #define CFG_ROLE_LAUNCH                            1
 #define CFG_USE_WPA_29							   0
 #define CFG_WPA_CTRL_IFACE						   0
-#define CFG_WLAN_FAST_CONNECT                      1
+//#define CFG_WLAN_FAST_CONNECT                      1
+// Fast connect caches connection over config data, ugh
+#define CFG_WLAN_FAST_CONNECT                      0
 /* PMF */
 #define CFG_IEEE80211W							   0
 #if CFG_WPA_CTRL_IFACE
